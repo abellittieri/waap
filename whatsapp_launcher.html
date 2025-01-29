@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Mensaje por WhatsApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #128C7E;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enviar Mensaje por WhatsApp</h1>
+        <p>Ingresa los datos del número de teléfono:</p>
+
+        <!-- Código de País (Lista Desplegable) -->
+        <label for="countryCode">Código de País:</label>
+        <select id="countryCode">
+            <option value="54">Argentina (+54)</option>
+            <option value="52">México (+52)</option>
+            <option value="55">Brasil (+55)</option>
+            <option value="1">Estados Unidos (+1)</option>
+            <option value="34">España (+34)</option>
+            <option value="49">Alemania (+49)</option>
+            <option value="33">Francia (+33)</option>
+            <option value="39">Italia (+39)</option>
+            <option value="44">Reino Unido (+44)</option>
+            <option value="91">India (+91)</option>
+            <option value="86">China (+86)</option>
+            <!-- Agrega más países si lo deseas -->
+        </select>
+
+        <!-- Código de Área -->
+        <label for="areaCode">Código de Área:</label>
+        <input type="text" id="areaCode" placeholder="Ej: 911">
+
+        <!-- Número de Teléfono -->
+        <label for="phoneNumber">Número de Teléfono:</label>
+        <input type="text" id="phoneNumber" placeholder="Ej: 53078536">
+
+        <!-- Botón para abrir WhatsApp -->
+        <button onclick="openWhatsApp()">Abrir WhatsApp</button>
+
+        <!-- Mensaje de error -->
+        <p class="error" id="errorMessage"></p>
+    </div>
+
+    <script>
+        function openWhatsApp() {
+            // Obtener los valores de los campos
+            const countryCode = document.getElementById('countryCode').value;
+            const areaCode = document.getElementById('areaCode').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+
+            // Validar que los campos no estén vacíos
+            if (!countryCode || !areaCode || !phoneNumber) {
+                showError("Por favor, completa todos los campos.");
+                return;
+            }
+
+            // Validar que el código de área y el número solo contengan dígitos
+            const regex = /^\d+$/;
+            if (!regex.test(areaCode) || !regex.test(phoneNumber)) {
+                showError("El código de área y el número de teléfono solo pueden contener dígitos.");
+                return;
+            }
+
+            // Construir el número de teléfono completo
+            const fullPhoneNumber = `${countryCode}${areaCode}${phoneNumber}`;
+
+            // Crear la URL de WhatsApp
+            const url = `https://api.whatsapp.com/send?phone=${fullPhoneNumber}`;
+
+            // Intentar abrir WhatsApp
+            try {
+                window.open(url, '_blank');
+            } catch (error) {
+                showError("No se pudo abrir WhatsApp. Asegúrate de que tu navegador permita ventanas emergentes.");
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+        }
+    </script>
+</body>
+</html>
